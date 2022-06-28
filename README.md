@@ -16,3 +16,9 @@ se están actualizando correctamente. Aunque las coordenadas se están actualiza
 las teclas de arriba y abajo del teclado, no se verá el resultado en pantalla.
 Por último cabe destacar que al agregar un evento cuando se presione una tecla en el index.html, se tuvo que modificar "ev.KeyCode" ya que el atributo KeyCode se encuentra obsoleto. 
 En este caso se utilizará "ev.key" para capturar la tecla que está presionando el usuario.
+
+## Cuarto commit
+- A lo anteriormente creado se agrega una función BoardView que se llama play, se encarga de ejecutar todo lo que tenga que ver conque el juego deba funcionar. En este caso tiene que
+limpiar y tiene dibujar el Canvas. A futuro debe chequear la coalisión de Ball con las Barras. Se creo el objeto Ball y se dibuja este objeto en el Canvas.
+Por último se agregó la funcionalidad de que se capturen las teclas del segundo jugador (segunda barra), se capturan las teclas "W" y "S".
+

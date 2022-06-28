@@ -2,17 +2,17 @@
 
 //Tablero
 (function () {
-    self.Board = function(width, height){
-            this.width = width;
-            this.height = height;
-            this.playing = false;
-            this.game_over = false;
-            this.bars = [];
-            this.ball = null;
-        }
-    
+    self.Board = function (width, height) {
+        this.width = width;
+        this.height = height;
+        this.playing = false;
+        this.game_over = false;
+        this.bars = [];
+        this.ball = null;
+    }
+
     self.Board.prototype = {
-        get elements(){
+        get elements() {
             var elements = this.bars;
             elements.push(this.ball);
             return elements;
@@ -20,9 +20,24 @@
     }
 })();
 
-//Barras
+//Bola
 (function(){
-    self.Bar = function(x,y,width,height,board){
+    self.Ball = function(x, y, radius, board){
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.speed_y = 0;
+        this.speed_x = 3;
+        this.board = board;
+
+        board.ball = this;
+        this.kind = "circle";
+    }
+})();
+
+//Barras
+(function () {
+    self.Bar = function (x, y, width, height, board) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -36,21 +51,22 @@
     }
 
     self.Bar.prototype = {
-        down: function(){
+        down: function () {
             this.y += this.speed;
         },
-        up: function(){
+        up: function () {
             this.y -= this.speed;
         },
-        toString: function(){
+        toString: function () {
             return "x: " + this.x + " y: " + this.y;
         }
     }
 })();
 
+
 //Vista
-(function(){
-    self.BoardView = function(canvas, board){
+(function () {
+    self.BoardView = function (canvas, board) {
         this.canvas = canvas;
         this.canvas.width = board.width;
         this.canvas.height = board.height;
@@ -59,47 +75,68 @@
     }
 
     self.BoardView.prototype = {
-        draw: function(){
-            for(var i = this.board.elements.length -1; i >= 0; i--){
+        clean: function(){
+            this.ctx.clearRect(0, 0, board.width, board.height)
+        },
+        draw: function () {
+            for (var i = this.board.elements.length - 1; i >= 0; i--) {
                 var el = this.board.elements[i];
                 //Dibujo el elemento.
                 draw(this.ctx, el);
             }
+        },
+        play: function(){
+            this.clean();
+            this.draw();
         }
+        
     }
 
     //Helpers methods (función fuera de una clase)
     //Función que dibuja algo en el canvas dependiendo de que tipo sea.
-    function draw(ctx, element){
-        if(element !== null && element.hasOwnProperty("kind")){
-            switch(element.kind){
-                //Si es cuadrado
-                case "rectangle":
-                    ctx.fillRect(element.x, element.y, element.width, element.height);
-                    break;
-            }
-        }      
+    function draw(ctx, element) {
+        switch (element.kind) {
+            //Si es cuadrado
+            case "rectangle":
+                ctx.fillRect(element.x, element.y, element.width, element.height);
+                break;
+            //Si es círculo
+            case "circle":
+                ctx.beginPath();
+                ctx.arc(element.x, element.y, element.radius, 0, 7);
+                ctx.fill();
+                ctx.closePath();
+                break;
+        }
     }
 })();
 
 var board = new Board(800, 400);
 var bar = new Bar(20, 100, 40, 100, board);
-var bar = new Bar(735, 100, 40, 100, board);
+var bar2 = new Bar(735, 100, 40, 100, board);
 var canvas = document.getElementById('canvas');
 var board_view = new BoardView(canvas, board);
+var ball = new Ball(350, 100, 10, board);
 
-document.addEventListener("keydown", function(ev){
-    if(ev.key == "ArrowUp"){
+
+document.addEventListener("keydown", function (ev) {
+    ev.preventDefault();
+    if (ev.key == "ArrowUp") {
         bar.up();
-    }else if(ev.key = "ArrowDown"){
+    } else if (ev.key == "ArrowDown") {
         bar.down();
+    } else if (ev.key == "w") {
+        bar2.up();
+    } else if (ev.key == "s") {
+        bar2.down();
     }
-    console.log("" + bar);
 });
 
-self.window.addEventListener("load", main);
+window.requestAnimationFrame(controller);
 
 //Controlador
-function main(){
-    board_view.draw();
+function controller() {
+    window.requestAnimationFrame(controller);
+    board_view.play();
+   
 }
