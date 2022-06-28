@@ -9,3 +9,10 @@ correctamente. De momento se tiene un modelo llamado Board, una vista llamada Bo
 su funcionalidad será permitir que la barra se mueva hacia arriba o hacía abajo en el Canvas. Además se definió un método draw en BoardView que permite dibujar un elemento
 en el Canvas dependiendo de qué tipo sea. Al utilizar esta función, de momento se crea la Barra en el Canvas, pero se sigue sin tener el objeto Bola (Ball) creado, es decir,
 es nulo.
+
+## Tercer commit
+- A lo anteriormente mencionado se finalizaron las funciones up() y down(). Además se agregó un método toString() en Barra (Bar) para poder ver si las coordenadas de la barra
+se están actualizando correctamente. Aunque las coordenadas se están actualizando, no se está volviendo a redibujar el canvas por lo que aunque se utilicen
+las teclas de arriba y abajo del teclado, no se verá el resultado en pantalla.
+Por último cabe destacar que al agregar un evento cuando se presione una tecla en el index.html, se tuvo que modificar "ev.KeyCode" ya que el atributo KeyCode se encuentra obsoleto. 
+En este caso se utilizará "ev.key" para capturar la tecla que está presionando el usuario.

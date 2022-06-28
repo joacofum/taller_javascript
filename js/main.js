@@ -29,6 +29,7 @@
         this.height = height;
         this.board = board;
         this.board.bars.push(this);
+        this.speed = 10;
 
         //indica de que forma geométrica es la barra para dibujarla en el canvas
         this.kind = "rectangle";
@@ -36,10 +37,13 @@
 
     self.Bar.prototype = {
         down: function(){
-
+            this.y += this.speed;
         },
         up: function(){
-
+            this.y -= this.speed;
+        },
+        toString: function(){
+            return "x: " + this.x + " y: " + this.y;
         }
     }
 })();
@@ -78,14 +82,24 @@
     }
 })();
 
+var board = new Board(800, 400);
+var bar = new Bar(20, 100, 40, 100, board);
+var bar = new Bar(735, 100, 40, 100, board);
+var canvas = document.getElementById('canvas');
+var board_view = new BoardView(canvas, board);
+
+document.addEventListener("keydown", function(ev){
+    if(ev.key == "ArrowUp"){
+        bar.up();
+    }else if(ev.key = "ArrowDown"){
+        bar.down();
+    }
+    console.log("" + bar);
+});
+
 self.window.addEventListener("load", main);
 
 //Controlador
 function main(){
-    var board = new Board(800, 400);
-    var bar = new Bar(20, 100, 40, 100, board);
-    var bar = new Bar(735, 100, 40, 100, board);
-    var canvas = document.getElementById('canvas');
-    var board_view = new BoardView(canvas, board);
     board_view.draw();
 }
