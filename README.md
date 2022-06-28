@@ -26,3 +26,9 @@ Por último se agregó la funcionalidad de que se capturen las teclas del segund
 - Se agregaron nuevos atributos tanto a Ball como a Board. En cuanto al primero, se agregó una dirección, que es un número entero que indicará si la pelota se mueve hacia la derecha
 o hacia la izquierda. Además se agregó un método move(), que se encargará de mover la pelota en el Canvas.
 En cuanto al segundo, se agregó un booleano "playing" que indicará si el usuario se encuentra jugando o si puso el juego en pausa. Con un evento correspondiente, cada vez que se aprete la tecla espacio, se cambia el estado de este booleano. Como último paso queda agregar las coaliciones de la pelota con la barra.
+
+## Sexto commit
+- Se agregaron nuevos atributos a Ball.
+- Se agregó un nuevo método llamado collision(), que reacciona a la colisión con una barra que se recibe como parámetro y calcula el ángulo en el que va a moverse la pelota, así como también cambia la dirección dependiendo la barra con la que esta colisionando.
+- Se crea una nueva función llamada check_collisions() en BoardView para poder chequear las colisiones, por cada barra valida si la bola está chocando con alguna de las barras.
+- Se crea una nueva función *helper* llamada hit(a, b) que va a validar la colisión entre cualquier elemento a y b y devolverá un booleano. En este caso se chequea cada barra (Bar) con la pelota (Ball). Si el retorno es verdadero, para que la pelota colisione con la barra se llama al método llamado collision().
