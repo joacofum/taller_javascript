@@ -22,3 +22,7 @@ En este caso se utilizará "ev.key" para capturar la tecla que está presionando
 limpiar y tiene dibujar el Canvas. A futuro debe chequear la coalisión de Ball con las Barras. Se creo el objeto Ball y se dibuja este objeto en el Canvas.
 Por último se agregó la funcionalidad de que se capturen las teclas del segundo jugador (segunda barra), se capturan las teclas "W" y "S".
 
+## Quinto commit
+- Se agregaron nuevos atributos tanto a Ball como a Board. En cuanto al primero, se agregó una dirección, que es un número entero que indicará si la pelota se mueve hacia la derecha
+o hacia la izquierda. Además se agregó un método move(), que se encargará de mover la pelota en el Canvas.
+En cuanto al segundo, se agregó un booleano "playing" que indicará si el usuario se encuentra jugando o si puso el juego en pausa. Con un evento correspondiente, cada vez que se aprete la tecla espacio, se cambia el estado de este booleano. Como último paso queda agregar las coaliciones de la pelota con la barra.
