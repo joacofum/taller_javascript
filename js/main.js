@@ -152,14 +152,16 @@
         },
         play: function(){
             //Si playing == true (si el usuario está jugando)
-            //Preguntar si el puntaje de algun jugador es < 5, cuando sea igual termina el juego.            
-            if(this.board.playing){
-                this.clean();
-                this.draw();
-                this.check_collisions();
-                this.update();
-                this.board.ball.move();               
-            }
+            //Preguntar si el puntaje de algun jugador es < 5, cuando sea igual termina el juego.      
+            //if(this.board.bars[0].score == 5 || this.board.bars[1].score == 5){
+                if(this.board.playing){
+                    this.clean();
+                    this.draw();
+                    this.check_collisions();
+                    this.update();
+                    this.board.ball.move();               
+                }
+            //}          
         },
         check_collisions: function(){
             //Cuando la pelota choca contra los costados laterales, arriba y abajo. Invertimos la velocidad de y para que rebote.
@@ -175,23 +177,31 @@
                 }
             }
         },
-        update: async function(){           
-            if(this.board.ball.x - this.board.ball.radius < 0 ){
-                this.board.bars[0].score++;                                      
-                this.board.ball.resetBall();
-                drawText("Felicitaciones jugador 2, llevas " + board.bars[0].score + " puntos!", canvas.height/2, 200, this.ctx);
-                this.board.playing = false;
-                await sleep(3000);
-                this.board.playing = true;    
-            }else if( ball.x + ball.radius > canvas.width){
-                console.log(this.board.height/2);
-                this.board.bars[1].score++;               
-                drawText("Felicitaciones jugador 1, llevas " + board.bars[1].score + " puntos!", canvas.height/2, 200, this.ctx);
-                this.board.ball.resetBall();
-                this.board.playing = false;    
-                await sleep(3000);
-                this.board.playing = true;           
-            }              
+        update: async function(){
+                if(this.board.ball.x - this.board.ball.radius < 0 ){
+                    console.log("entre");
+                    this.board.bars[0].score++; 
+                    if(this.board.bars[0].score >= 5){
+                        drawText("Felicitaciones jugador 2, ganaste!", canvas.height/2, 200, this.ctx);
+                        this.board.playing = false;
+                    }else{
+                        this.board.ball.resetBall();
+                        drawText("Felicitaciones jugador 2, llevas " + board.bars[0].score + " puntos!", canvas.height/2, 200, this.ctx);
+                        this.board.playing = false;    
+                    }                                                        
+                }else if( ball.x + ball.radius > canvas.width){
+                    this.board.bars[1].score++; 
+                    if(this.board.bars[1].score >= 5){
+                        drawText("Felicitaciones jugador 1, ganaste!", canvas.height/2, 200, this.ctx);
+                        this.board.playing = false;
+                    }else{              
+                        drawText("Felicitaciones jugador 1, llevas " + board.bars[1].score + " puntos!", canvas.height/2, 200, this.ctx);
+                        this.board.ball.resetBall();
+                        this.board.playing = false;    
+                        await sleep(3000);
+                        this.board.playing = true;  
+                    }                            
+                }                                                            
         }
     }
 
