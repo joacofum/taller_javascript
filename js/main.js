@@ -179,21 +179,28 @@
         },
         update: async function(){
                 if(this.board.ball.x - this.board.ball.radius < 0 ){
-                    console.log("entre");
                     this.board.bars[0].score++; 
                     if(this.board.bars[0].score >= 5){
                         drawText("Felicitaciones jugador 2, ganaste!", canvas.height/2, 200, this.ctx);
                         this.board.playing = false;
+                        if (confirm("¿Desea volver a jugar?") == true) {
+                            location.reload();
+                        }
                     }else{
                         this.board.ball.resetBall();
                         drawText("Felicitaciones jugador 2, llevas " + board.bars[0].score + " puntos!", canvas.height/2, 200, this.ctx);
-                        this.board.playing = false;    
+                        this.board.playing = false;
+                        await sleep(3000);
+                        this.board.playing = true;      
                     }                                                        
                 }else if( ball.x + ball.radius > canvas.width){
                     this.board.bars[1].score++; 
                     if(this.board.bars[1].score >= 5){
                         drawText("Felicitaciones jugador 1, ganaste!", canvas.height/2, 200, this.ctx);
                         this.board.playing = false;
+                        if (confirm("¿Desea volver a jugar?") == true) {
+                            location.reload();
+                        }
                     }else{              
                         drawText("Felicitaciones jugador 1, llevas " + board.bars[1].score + " puntos!", canvas.height/2, 200, this.ctx);
                         this.board.ball.resetBall();
@@ -270,27 +277,30 @@ var bar = new Bar(20, 100, 40, 100, board);
 var bar2 = new Bar(735, 100, 40, 100, board);
 var canvas = document.getElementById('canvas');
 var board_view = new BoardView(canvas, board);
-var ball = new Ball(350, 100, 10, board);
-
+var ball = new Ball(this.board.width/2, this.board.height/2, 10, board);
 
 document.addEventListener("keydown", function (ev) {
-    if (ev.key == "ArrowUp") {
-        ev.preventDefault();
-        bar.up();
-    } else if (ev.key == "ArrowDown") {
-        ev.preventDefault();
-        bar.down();
-    } else if (ev.key == "w") {
-        ev.preventDefault();
-        bar2.up();
-    } else if (ev.key == "s") {
-        ev.preventDefault();
-        bar2.down();
-    } else if (ev.key == " "){
+    if (ev.key == " "){
         ev.preventDefault();
         //funciona como toggle.
         board.playing = !board.playing;
     }
+
+    if(board.playing){
+        if (ev.key == "ArrowUp") {
+            ev.preventDefault();
+            bar.up();
+        } else if (ev.key == "ArrowDown") {
+            ev.preventDefault();
+            bar.down();
+        } else if (ev.key == "w") {
+            ev.preventDefault();
+            bar2.up();
+        } else if (ev.key == "s") {
+            ev.preventDefault();
+            bar2.down();
+        }
+    } 
 });
 
 //Dibujo los elementos en el canvas porque si no lo hago no se muestra nada,
@@ -303,5 +313,4 @@ window.requestAnimationFrame(controller);
 function controller() {
     window.requestAnimationFrame(controller);
     board_view.play();
-   
 }
