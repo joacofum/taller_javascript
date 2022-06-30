@@ -68,10 +68,10 @@
 
             if (this.x > (this.board.width / 2)) {
                 this.direction = -1;
-                this.speed += 1;
+                this.speed += 0.5;
             }else {
                 this.direction = 1;
-                this.speed += 1;
+                this.speed += 0.5;
             }
         },
         get width(){
@@ -79,6 +79,19 @@
         },
         get height(){
             return this.radius * 2;
+        },
+        resetBall: function(){
+            this.x = this.board.width/2;
+            this.y = this.board.height/2;
+            this.speed = 3;
+            this.speed_x = 3;
+            this.speed_y = 0
+            if(this.direction == 1){
+                this.direction = -1;
+            }else{
+                this.direction = 1;
+            }
+                  
         }
     }
 })();
@@ -92,18 +105,22 @@
         this.height = height;
         this.board = board;
         this.board.bars.push(this);
-        this.speed = 10;
-
+        this.speed = 20;
+        this.score = 0;
         //indica de que forma geométrica es la barra para dibujarla en el canvas
         this.kind = "rectangle";
     }
 
     self.Bar.prototype = {
         down: function () {
-            this.y += this.speed;
+            if((this.y + this.speed) - this.board.height != -100){
+                this.y += this.speed;
+            }
         },
         up: function () {
-            this.y -= this.speed;
+            if((this.y - this.speed) + this.board.height != this.board.height){
+                this.y -= this.speed;
+            }     
         },
         toString: function () {
             return "x: " + this.x + " y: " + this.y;
@@ -135,21 +152,47 @@
         },
         play: function(){
             //Si playing == true (si el usuario está jugando)
+            //Preguntar si el puntaje de algun jugador es < 5, cuando sea igual termina el juego.            
             if(this.board.playing){
                 this.clean();
                 this.draw();
                 this.check_collisions();
-                this.board.ball.move();
+                this.update();
+                this.board.ball.move();               
             }
         },
         check_collisions: function(){
+            //Cuando la pelota choca contra los costados laterales, arriba y abajo. Invertimos la velocidad de y para que rebote.
+            if(this.board.ball.y - this.board.ball.radius < 0 || this.board.ball.y + this.board.ball.radius > this.board.height){
+                this.board.ball.speed_y = -this.board.ball.speed_y;
+            }
+            
+            //Cuando la pelota choca con la barra
             for (var i = this.board.bars.length -1; i >= 0; i--){
                 var bar = this.board.bars[i];
                 if(hit(bar, this.board.ball)){
                     this.board.ball.collision(bar);
                 }
             }
-        }    
+        },
+        update: async function(){           
+            if(this.board.ball.x - this.board.ball.radius < 0 ){
+                this.board.bars[0].score++;                                      
+                this.board.ball.resetBall();
+                drawText("Felicitaciones jugador 2, llevas " + board.bars[0].score + " puntos!", canvas.height/2, 200, this.ctx);
+                this.board.playing = false;
+                await sleep(3000);
+                this.board.playing = true;    
+            }else if( ball.x + ball.radius > canvas.width){
+                console.log(this.board.height/2);
+                this.board.bars[1].score++;               
+                drawText("Felicitaciones jugador 1, llevas " + board.bars[1].score + " puntos!", canvas.height/2, 200, this.ctx);
+                this.board.ball.resetBall();
+                this.board.playing = false;    
+                await sleep(3000);
+                this.board.playing = true;           
+            }              
+        }
     }
 
     //Helpers methods (función fuera de una clase)
@@ -168,6 +211,18 @@
                 ctx.closePath();
                 break;
         }
+    }
+
+    //Función para pausar
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // draw text
+    function drawText(text,x,y,ctx){
+        ctx.fillStyle = "#000000";
+        ctx.font = "20px fantasy";
+        ctx.fillText(text, x, y);
     }
 
     //Otro helper para chequear si la pelota choca contra la barra.
@@ -194,6 +249,7 @@
             if (a.y <= b.y && a.y + a.height >= b.y + b.height)
                 hit = true;
         }
+
         return hit;
     }
 
