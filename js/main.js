@@ -113,6 +113,8 @@
 
     self.Bar.prototype = {
         down: function () {
+            console.log(this.board.height / 2);
+            console.log(this.y - this.speed);
             if((this.y + this.speed) - this.board.height != -100){
                 this.y += this.speed;
             }

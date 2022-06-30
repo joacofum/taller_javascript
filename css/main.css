@@ -1,0 +1,15 @@
+body{
+    background-color: rgb(115, 169, 173); 
+    text-align:center; 
+}
+
+h1 {
+    background-color: rgb(144, 200, 172);
+}
+
+#j1, #j2{
+    text-align:center;
+    display: inline-block;
+    margin-right: 200px;
+    margin-left: 200px;
+}
